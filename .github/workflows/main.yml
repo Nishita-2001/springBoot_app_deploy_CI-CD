@@ -10,7 +10,7 @@ jobs:
 
   deploy:
     needs: ci
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy.yml@main
 
     with:
       ec2-user: ec2-user

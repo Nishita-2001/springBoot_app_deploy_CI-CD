@@ -45,5 +45,13 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         script: |
-          pkill -f '.jar' || true
-          nohup java -jar /home/ec2-user/*.jar > app.log 2>&1 &
+          echo "Stopping old app if running..."
+          if pgrep -f $JAR_NAME > /dev/null
+          then
+            pkill -f $JAR_NAME
+          else
+            echo "No existing app running"
+          fi
+
+          echo "Starting new app..."
+          nohup java -jar $APP_DIR/$JAR_NAME > app.log 2>&1 &

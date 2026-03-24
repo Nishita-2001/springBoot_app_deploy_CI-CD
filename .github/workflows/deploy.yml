@@ -5,7 +5,7 @@ on:
     secrets:
       EC2_HOST:
         required: true
-      EC2_SSH_KEY:
+      EC2_KEY:
         required: true
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
           ec2-user: ec2-user
 
         env:
-          EC2_SSH_KEY: ${{ secrets.EC2_KEY }}
+          EC2_KEY: ${{ secrets.EC2_KEY }}
 
 
 

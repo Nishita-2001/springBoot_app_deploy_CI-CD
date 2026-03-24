@@ -9,6 +9,10 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      APP_DIR: /home/ec2-user
+      JAR_NAME: demoapp-0.0.1-SNAPSHOT.jar
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4

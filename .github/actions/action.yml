@@ -37,18 +37,25 @@ runs:
         username: ${{ inputs.ec2-user }}
         key: ${{ env.EC2_KEY }}
         script: |
+          set +e
+        
           echo "Stopping old app..."
-          pkill -f 'java -jar' || true
-
+          pkill -f 'java -jar'
+        
           echo "Starting new app..."
-          cd /home/ec2-user
-
+          cd /home/ec2-user || exit 1
+        
           JAR_FILE=$(ls *.jar | head -n 1)
-
+        
+          if [ -z "$JAR_FILE" ]; then
+            echo "No JAR file found!"
+            exit 1
+          fi
+        
           echo "Running $JAR_FILE"
-
+        
           nohup java -jar $JAR_FILE > app.log 2>&1 &
-
+        
           sleep 5
-
+        
           echo "App started successfully"

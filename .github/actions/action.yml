@@ -1,0 +1,41 @@
+name: "Spring Boot Build & Deploy"
+description: "Build Maven project and deploy to EC2"
+
+inputs:
+  ec2-host:
+    required: true
+  ec2-user:
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build with Maven
+      run: mvn clean package
+      shell: bash
+
+    - name: Copy JAR to EC2
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ inputs.ec2-host }}
+        username: ${{ inputs.ec2-user }}
+        key: ${{ env.EC2_KEY }}
+        source: "target/*.jar"
+        target: "/home/ec2-user/"
+
+    - name: Deploy on EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ inputs.ec2-host }}
+        username: ${{ inputs.ec2-user }}
+        key: ${{ env.EC2_KEY }}
+        script: |
+          pkill -f 'java -jar' || true
+          nohup java -jar /home/ec2-user/*.jar > app.log 2>&1 &

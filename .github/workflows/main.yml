@@ -6,11 +6,11 @@ on:
 
 jobs:
   ci:
-    uses: ./.github/workflows/ci.yml@main
+    uses: ./.github/workflows/ci.yml
 
   deploy:
     needs: ci
-    uses: ./.github/workflows/deploy.yml@main
+    uses: ./.github/workflows/deploy.yml
 
     with:
       ec2-user: ec2-user
